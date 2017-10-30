@@ -1,0 +1,6 @@
+﻿  BodyTracking.cpp
+c:\users\jwatson27\documents\visual studio 2017\projects\bodytracking\bodytracking\bodytracking.cpp(175): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\jwatson27\documents\visual studio 2017\projects\bodytracking\bodytracking\bodytracking.cpp(176): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+c:\users\jwatson27\documents\visual studio 2017\projects\bodytracking\bodytracking\bodytracking.cpp(177): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  BodyTracking.vcxproj -> C:\Users\jwatson27\documents\visual studio 2017\Projects\BodyTracking\Debug\BodyTracking.exe
+  BodyTracking.vcxproj -> C:\Users\jwatson27\documents\visual studio 2017\Projects\BodyTracking\Debug\BodyTracking.pdb (Partial PDB)
