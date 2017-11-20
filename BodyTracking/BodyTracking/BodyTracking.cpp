@@ -18,8 +18,8 @@ int main(int argc, char *argv[])
     IBodyFrameReader *bodyFrameReader = nullptr;
 
 	// For MultiSourceFrames
-	IMultiSourceFrameReader *reader = nullptr;
-	IBodyFrameReference *bodyFrameReference = nullptr;		
+	IMultiSourceFrameReader *multiSourceFrameReader = nullptr;
+			
 
 
     //Get the default Kinect sensor
@@ -28,8 +28,8 @@ int main(int argc, char *argv[])
     //If the function succeeds, open the sensor
 	if (SUCCEEDED(hr)) {
 		hr = sensor->Open();
-
-		///*
+		
+		/*
 		if (SUCCEEDED(hr)) {
 			//Get a body frame source from which we can get our body frame reader
 			IBodyFrameSource *bodyFrameSource = nullptr;
@@ -46,28 +46,33 @@ int main(int argc, char *argv[])
 		/*/
         if (SUCCEEDED(hr)) {
             //Get a body frame source from which we can get our body frame reader
-			hr = sensor->OpenMultiSourceFrameReader(FrameSourceTypes_Color |
-				FrameSourceTypes_Depth |
-				FrameSourceTypes_Infrared |
-				FrameSourceTypes_Body, 
-				&reader);			
+			hr = sensor->OpenMultiSourceFrameReader(FrameSourceTypes_Color    | FrameSourceTypes_Depth |
+													FrameSourceTypes_Infrared | FrameSourceTypes_Body, 
+													&multiSourceFrameReader);
 
+			
+
+
+			/*
 			if (SUCCEEDED(hr)) {
-				IMultiSourceFrame *multiFrameSource = nullptr;
-				hr = reader->AcquireLatestFrame(&multiFrameSource);
+				IMultiSourceFrame *multiSourceFrame = nullptr;
+				
+				
+				while (FAILED(hr = multiSourceFrameReader->AcquireLatestFrame(&multiSourceFrame)));
+
 
 				///IBodyFrameSource *bodyFrameSource = nullptr;
 				///hr = sensor->get_BodyFrameSource(&bodyFrameSource);
 
 				if (SUCCEEDED(hr)) {
-					hr = multiFrameSource->get_BodyFrameReference(&bodyFrameReference);
+					hr = multiSourceFrame->get_BodyFrameReference(&bodyFrameReference);
 					///hr = bodyFrameSource->OpenReader(&bodyFrameReader);
 				}
 
 				//We're done with bodyFrameSource, so we'll release it
 				///safeRelease(bodyFrameSource);
-				safeRelease(multiFrameSource);
-			}
+				safeRelease(multiSourceFrame);
+			}*/
         }//*/
     }
 
@@ -76,44 +81,106 @@ int main(int argc, char *argv[])
         return E_FAIL;
     }
 
-    //*
+    /*
 	while (bodyFrameReader != nullptr) {
 	/*/
-	while (bodyFrameReference != nullptr) {
+	while (multiSourceFrameReader != nullptr) {
 	//*/
-        IBodyFrame *bodyFrame = nullptr;
+		IMultiSourceFrame *multiSourceFrame = nullptr;
+		IBodyFrameReference *bodyFrameReference = nullptr;
+		IBodyFrame *bodyFrame = nullptr;
+		IColorFrameReference *colorFrameReference = nullptr;
+		IColorFrame *colorFrame = nullptr;
 
-		//*
-		hr = bodyFrameReader->AcquireLatestFrame(&bodyFrame);
-		/*/
-		hr = bodyFrameReference->AcquireFrame(&bodyFrame);
-		//*/
+		if (SUCCEEDED(hr)) {						
+			while (FAILED(hr = multiSourceFrameReader->AcquireLatestFrame(&multiSourceFrame)));
+			
 
-        if (SUCCEEDED(hr)) {
-            IBody *bodies[BODY_COUNT] = {0};
-            hr = bodyFrame->GetAndRefreshBodyData(_countof(bodies), bodies);
 
-            if (SUCCEEDED(hr)) {
-                processBodies(BODY_COUNT, bodies);
-                //After body processing is done, we're done with our bodies so release them.
-                for (unsigned int bodyIndex = 0; bodyIndex < _countof(bodies); bodyIndex++) {
-                    safeRelease(bodies[bodyIndex]);
-                }
+			// Get Body Frame
+			hr = multiSourceFrame->get_BodyFrameReference(&bodyFrameReference);
+			
+			if (SUCCEEDED(hr)) {
+				hr = bodyFrameReference->AcquireFrame(&bodyFrame);
 
-                safeRelease(bodyFrame);
-            }
-        }
-        else if (sensor) {
-            BOOLEAN isSensorAvailable = false;
-            hr = sensor->get_IsAvailable(&isSensorAvailable);
-            if (SUCCEEDED(hr) && isSensorAvailable == false) {
-                std::cerr << "No available sensor is found.\n";
-            }
-        }
-        else {
-            std::cerr << "Trouble reading the body frame.\n";
-        }
-    }
+				if (SUCCEEDED(hr)) {
+					IBody *bodies[BODY_COUNT] = { 0 };
+					hr = bodyFrame->GetAndRefreshBodyData(_countof(bodies), bodies);
+
+					if (SUCCEEDED(hr)) {
+						//std::cout << "Processing bodies!\n";
+						processBodies(BODY_COUNT, bodies);
+						//std::cout << "After processing bodies!\n";
+						//After body processing is done, we're done with our bodies so release them.
+						for (unsigned int bodyIndex = 0; bodyIndex < _countof(bodies); bodyIndex++) {
+							safeRelease(bodies[bodyIndex]);
+						}
+						safeRelease(bodyFrame);
+					}
+				}
+				else if (sensor) {
+					BOOLEAN isSensorAvailable = false;
+					hr = sensor->get_IsAvailable(&isSensorAvailable);
+					if (SUCCEEDED(hr) && isSensorAvailable == false) {
+						std::cerr << "No available sensor is found.\n";
+					}
+				}
+				else {
+					std::cerr << "Trouble reading the body frame.\n";
+				}
+			}
+
+
+			/*
+
+			// Get Color Frame
+			hr = multiSourceFrame->get_ColorFrameReference(&colorFrameReference);
+			
+			if (SUCCEEDED(hr)) {
+				hr = colorFrameReference->AcquireFrame(&colorFrame);
+
+				if (SUCCEEDED(hr)) {
+					// Process Color Frame
+					/*
+					IBody *bodies[BODY_COUNT] = { 0 };
+					hr = bodyFrame->GetAndRefreshBodyData(_countof(bodies), bodies);
+
+					if (SUCCEEDED(hr)) {
+						//std::cout << "Processing bodies!\n";
+						processBodies(BODY_COUNT, bodies);
+						//std::cout << "After processing bodies!\n";
+						//After body processing is done, we're done with our bodies so release them.
+						for (unsigned int bodyIndex = 0; bodyIndex < _countof(bodies); bodyIndex++) {
+							safeRelease(bodies[bodyIndex]);
+						}
+						safeRelease(colorFrame);
+					}
+					*/
+				/*}
+				else if (sensor) {
+					BOOLEAN isSensorAvailable = false;
+					hr = sensor->get_IsAvailable(&isSensorAvailable);
+					if (SUCCEEDED(hr) && isSensorAvailable == false) {
+						std::cerr << "No available sensor is found.\n";
+					}
+				}
+				else {
+					std::cerr << "Trouble reading the body frame.\n";
+				}
+			}
+
+
+			*/
+						
+			safeRelease(multiSourceFrame);
+		}
+
+		
+		safeRelease(bodyFrameReference);
+	}
+
+	
+	safeRelease(multiSourceFrameReader);
 
     return 0;
 }
@@ -129,6 +196,8 @@ void processBodies(const unsigned int &bodyCount, IBody **bodies)
         if (FAILED(hr) || isTracked == false) {
             continue;
         }
+
+		std::cout << "Body Index: " << bodyIndex << " \n";
 
         //If we're here the body is tracked so lets get the joint properties for this skeleton
         Joint joints[JointType_Count];
