@@ -142,12 +142,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="BodyTracking.cpp" />
     <ClCompile Include="ImageRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Form1.h" />
     <ClInclude Include="ImageRenderer.h" />
     <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_NETFramework,Version=v4.0.AssemblyAttributes.asm" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
