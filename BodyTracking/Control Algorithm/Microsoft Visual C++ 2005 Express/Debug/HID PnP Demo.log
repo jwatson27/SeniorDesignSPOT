@@ -1,0 +1,9 @@
+﻿cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
+  BodyTracking.cpp
+BodyTracking.cpp(1): warning C4005: '__CLR_VER': macro redefinition
+  BodyTracking.cpp(1): note: command-line arguments:  see previous definition of '__CLR_VER'
+BodyTracking.cpp(1): warning C4651: '/D__CLR_VER=40702117' specified for precompiled header but not for current compile
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\generic hid - pnp demo - pc software\microsoft visual c++ 2005 express\Form1.h(1711): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\generic hid - pnp demo - pc software\microsoft visual c++ 2005 express\Form1.h(1729): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  HID PnP Demo.vcxproj -> C:\Users\jwatson27\Source\Repos\SeniorDesignSPOT\BodyTracking\Generic HID - PnP Demo - PC Software\Microsoft Visual C++ 2005 Express\Debug\HID PnP Demo.exe
+  HID PnP Demo.vcxproj -> C:\Users\jwatson27\Source\Repos\SeniorDesignSPOT\BodyTracking\Generic HID - PnP Demo - PC Software\Microsoft Visual C++ 2005 Express\Debug\HID PnP Demo.pdb (Full PDB)

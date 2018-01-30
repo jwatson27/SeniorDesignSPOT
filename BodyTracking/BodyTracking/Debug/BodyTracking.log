@@ -1,6 +1,153 @@
-﻿  BodyTracking.cpp
-c:\users\jwatson27\documents\visual studio 2017\projects\bodytracking\bodytracking\bodytracking.cpp(175): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\jwatson27\documents\visual studio 2017\projects\bodytracking\bodytracking\bodytracking.cpp(176): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-c:\users\jwatson27\documents\visual studio 2017\projects\bodytracking\bodytracking\bodytracking.cpp(177): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-  BodyTracking.vcxproj -> C:\Users\jwatson27\documents\visual studio 2017\Projects\BodyTracking\Debug\BodyTracking.exe
-  BodyTracking.vcxproj -> C:\Users\jwatson27\documents\visual studio 2017\Projects\BodyTracking\Debug\BodyTracking.pdb (Partial PDB)
+﻿  HID PnP Demo.cpp
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(76): error C2871: 'System': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(77): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(77): error C2871: 'ComponentModel': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(78): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(78): error C2871: 'Collections': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(79): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(79): error C2871: 'Forms': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(80): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(80): error C2871: 'Data': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(81): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(81): error C2871: 'Drawing': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(86): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(86): error C2871: 'Threading': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(87): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(87): error C2871: 'InteropServices': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): warning C4467: usage of ATL attributes is deprecated
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(125): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(125): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(125): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(125): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(134): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(134): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(134): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(134): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(139): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(139): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(139): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(139): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(146): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(146): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(146): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(146): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(157): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(157): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(157): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(157): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(169): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(169): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(169): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(169): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(226): error C2059: syntax error: 'public'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(227): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(227): error C2143: syntax error: missing ';' before '{'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(227): error C2447: '{': missing function header (old-style formal list?)
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\hid pnp demo.cpp(8): error C2337: 'STAThreadAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\hid pnp demo.cpp(9): error C2065: 'array': undeclared identifier
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\hid pnp demo.cpp(9): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\hid pnp demo.cpp(9): error C2065: 'String': undeclared identifier
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\hid pnp demo.cpp(9): error C2059: syntax error: '>'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\hid pnp demo.cpp(10): error C2143: syntax error: missing ';' before '{'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\hid pnp demo.cpp(10): error C2447: '{': missing function header (old-style formal list?)
+  BodyTracking.cpp
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(76): error C2871: 'System': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(77): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(77): error C2871: 'ComponentModel': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(78): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(78): error C2871: 'Collections': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(79): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(79): error C2871: 'Forms': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(80): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(80): error C2871: 'Data': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(81): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(81): error C2871: 'Drawing': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(86): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(86): error C2871: 'Threading': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(87): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(87): error C2871: 'InteropServices': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): warning C4467: usage of ATL attributes is deprecated
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(116): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(125): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(125): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(125): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(125): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(134): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(134): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(134): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(134): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(139): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(139): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(139): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(139): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(146): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(146): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(146): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(146): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(157): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(157): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(157): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(157): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(169): error C2337: 'DllImport': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(169): error C2653: 'CharSet': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(169): error C2065: 'Unicode': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(169): note: missing quotes ("") around 'Unicode'?
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(226): error C2059: syntax error: 'public'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(227): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(227): error C2143: syntax error: missing ';' before '{'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(227): error C2447: '{': missing function header (old-style formal list?)
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(56): error C2039: 'Application': is not a member of 'HIDPnPDemo'
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(74): note: see declaration of 'HIDPnPDemo'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(56): error C3083: 'Application': the symbol to the left of a '::' must be a type
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(56): error C2039: 'EnableVisualStyles': is not a member of 'HIDPnPDemo'
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(74): note: see declaration of 'HIDPnPDemo'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(56): error C3861: 'EnableVisualStyles': identifier not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(57): error C2039: 'Application': is not a member of 'HIDPnPDemo'
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(74): note: see declaration of 'HIDPnPDemo'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(57): error C3083: 'Application': the symbol to the left of a '::' must be a type
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(57): error C2039: 'SetCompatibleTextRenderingDefault': is not a member of 'HIDPnPDemo'
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(74): note: see declaration of 'HIDPnPDemo'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(57): error C3861: 'SetCompatibleTextRenderingDefault': identifier not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(60): error C2039: 'Application': is not a member of 'HIDPnPDemo'
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(74): note: see declaration of 'HIDPnPDemo'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(60): error C3083: 'Application': the symbol to the left of a '::' must be a type
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(60): error C2039: 'Run': is not a member of 'HIDPnPDemo'
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(74): note: see declaration of 'HIDPnPDemo'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(60): error C2065: 'gcnew': undeclared identifier
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(60): error C2039: 'Form1': is not a member of 'HIDPnPDemo'
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\form1.h(74): note: see declaration of 'HIDPnPDemo'
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\bodytracking.cpp(60): error C2146: syntax error: missing ')' before identifier 'Form1'
+  AssemblyInfo.cpp
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(3): error C2871: 'System': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(4): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(4): error C2871: 'Reflection': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(5): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(5): error C2871: 'CompilerServices': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(6): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(6): error C2871: 'InteropServices': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(7): error C2653: 'System': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(7): error C2871: 'Permissions': a namespace with this name does not exist
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(14): warning C4467: usage of ATL attributes is deprecated
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(14): error C2337: 'AssemblyTitleAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(15): error C2337: 'AssemblyDescriptionAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(16): error C2337: 'AssemblyConfigurationAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(17): error C2337: 'AssemblyCompanyAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(18): error C2337: 'AssemblyProductAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(19): error C2337: 'AssemblyCopyrightAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(20): error C2337: 'AssemblyTrademarkAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(21): error C2337: 'AssemblyCultureAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(34): error C2337: 'AssemblyVersionAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(36): error C2337: 'ComVisible': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(38): error C2337: 'CLSCompliantAttribute': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(40): error C2337: 'SecurityPermission': attribute not found
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(40): error C2653: 'SecurityAction': is not a class or namespace name
+c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(40): error C2065: 'RequestMinimum': undeclared identifier
+  c:\users\jwatson27\source\repos\seniordesignspot\bodytracking\bodytracking\assemblyinfo.cpp(40): note: missing quotes ("") around 'RequestMinimum'?
+  Generating Code...
