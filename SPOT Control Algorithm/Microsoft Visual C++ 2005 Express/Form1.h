@@ -720,7 +720,7 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			this->label4->Name = L"label4";
 			this->label4->Size = System::Drawing::Size(69, 13);
 			this->label4->TabIndex = 1;
-			this->label4->Text = L"Bottom Slider";
+			this->label4->Text = L"Right Direction";
 			// 
 			// label3
 			// 
@@ -729,7 +729,7 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			this->label3->Name = L"label3";
 			this->label3->Size = System::Drawing::Size(55, 13);
 			this->label3->TabIndex = 1;
-			this->label3->Text = L"Top Slider";
+			this->label3->Text = L"Left Direction";
 			// 
 			// label2
 			// 
@@ -738,7 +738,7 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(66, 13);
 			this->label2->TabIndex = 1;
-			this->label2->Text = L"Right Button";
+			this->label2->Text = L"Right Speed";
 			// 
 			// label1
 			// 
@@ -747,7 +747,7 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(59, 13);
 			this->label1->TabIndex = 1;
-			this->label1->Text = L"Left Button";
+			this->label1->Text = L"Left Speed";
 			// 
 			// numericUpDown4
 			// 
