@@ -21,6 +21,9 @@
     <ClCompile Include="ImageRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ImageRenderer.h">
@@ -29,5 +32,18 @@
     <ClInclude Include="stdafx.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Form1.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Form1.resx">
+      <Filter>Header Files</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="_NETFramework,Version=v4.0.AssemblyAttributes.asm">
+      <Filter>Source Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

@@ -1,0 +1,15 @@
+﻿cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
+  stdafx.cpp
+cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
+  AssemblyInfo.cpp
+AssemblyInfo.cpp(40): warning C4947: 'System::Security::Permissions::SecurityAction::RequestMinimum': marked as obsolete
+  AssemblyInfo.cpp(40): note: Message: 'Assembly level declarative security is obsolete and is no longer enforced by the CLR by default. See http://go.microsoft.com/fwlink/?LinkID=155570 for more information.'
+  HID PnP Demo.cpp
+  Generating Code...
+cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
+  .NETFramework,Version=v4.0.AssemblyAttributes.cpp
+HID PnP Demo.obj : warning LNK4249: directive '/CLRTHREADATTRIBUTE:STA' conflicts with command line or previous directive; ignored
+  LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
+HID PnP Demo.obj : warning LNK4249: directive '/CLRTHREADATTRIBUTE:STA' conflicts with command line or previous directive; ignored
+  HID PnP Demo.vcxproj -> H:\Senior Design\USB Device - HID - Custom Demos\Generic HID - PnP Demo - PC Software\Microsoft Visual C++ 2005 Express\Release\HID PnP Demo.exe
+  HID PnP Demo.vcxproj -> H:\Senior Design\USB Device - HID - Custom Demos\Generic HID - PnP Demo - PC Software\Microsoft Visual C++ 2005 Express\Release\HID PnP Demo.pdb (Full PDB)

@@ -1,0 +1,9 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (HID PnP Demo.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
+  BodyTracking.cpp
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1722): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1734): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1770): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1776): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+  HID PnP Demo.vcxproj -> C:\Users\jwatson27\Source\Repos\SeniorDesignSPOT\SPOT Control Algorithm\Microsoft Visual C++ 2005 Express\Debug\SPOT Control Algorithm.exe
+  HID PnP Demo.vcxproj -> C:\Users\jwatson27\Source\Repos\SeniorDesignSPOT\SPOT Control Algorithm\Microsoft Visual C++ 2005 Express\Debug\SPOT Control Algorithm.pdb (Full PDB)
