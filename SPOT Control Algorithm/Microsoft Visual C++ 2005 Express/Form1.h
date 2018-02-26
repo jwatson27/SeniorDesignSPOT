@@ -56,6 +56,12 @@ NOTE:	All user made code contained in this project is in the Form1.h file.
 #include <iostream>
 
 
+// OPENCV
+
+#include <opencv2/core.hpp>
+#include <opencv2/imgcodecs.hpp>
+#include <opencv2/highgui.hpp>
+
 
 template<class Interface>
 static inline void safeRelease(Interface *&interfaceToRelease)
@@ -73,7 +79,6 @@ double lowestVal[NUM_DIFFS];
 double highestVal[NUM_DIFFS];
 int sampleCount = 0;
 double avgDiff[NUM_DIFFS];
-int activeBodyIndex = -1;
 
 class Person {
 public:
@@ -128,6 +133,9 @@ Person jw = Person(16.3, 0.8, 25.3, 1.2, 36.0, 1.5, 8.1, 0.5);
 #define MY_DEVICE_ID  "Vid_04d8&Pid_005e"	
 //-------------------------------------------------------END CUT AND PASTE BLOCK-------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
+cv::Mat colorImage;
+cv::Mat depthImage_short;
+cv::Mat depthImage_byte;
 
 
 namespace HIDPnPDemo {
@@ -254,8 +262,11 @@ namespace HIDPnPDemo {
 	unsigned int ADCValueSliderTop = 0;			//Updated by ReadWriteThread, read by FormUpdateTimer tick handler (needs to be atomic)
 	unsigned int ADCValueSliderBottom = 0;		//Updated by ReadWriteThread, read by FormUpdateTimer tick handler (needs to be atomic)
 
-	signed char ACCValueX = 0;					//Updated by ReadWriteThread, read by FormUpdateTimer tick handler (needs to be atomic)
-	signed char ACCValueY = 0;					//Updated by ReadWriteThread, read by FormUpdateTimer tick handler (needs to be atomic)
+
+	signed int ACCValueX = 0;
+	signed int ACCValueY = 0;
+	//signed char ACCValueX = 0;					//Updated by ReadWriteThread, read by FormUpdateTimer tick handler (needs to be atomic)
+	//signed char ACCValueY = 0;					//Updated by ReadWriteThread, read by FormUpdateTimer tick handler (needs to be atomic)
 	signed char ACCValueZ = 0;					//Updated by ReadWriteThread, read by FormUpdateTimer tick handler (needs to be atomic)
 	unsigned char ACCValueT = 0;				//Updated by ReadWriteThread, read by FormUpdateTimer tick handler (needs to be atomic)
 
@@ -636,7 +647,7 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			this->label7->Name = L"label7";
 			this->label7->Size = System::Drawing::Size(36, 13);
 			this->label7->TabIndex = 18;
-			this->label7->Text = L"Acc Z";
+			this->label7->Text = L"Angle (deg Z/X)";
 			// 
 			// label6
 			// 
@@ -645,7 +656,7 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			this->label6->Name = L"label6";
 			this->label6->Size = System::Drawing::Size(36, 13);
 			this->label6->TabIndex = 18;
-			this->label6->Text = L"Acc Y";
+			this->label6->Text = L"Position X (cm)";
 			// 
 			// label5
 			// 
@@ -654,7 +665,7 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			this->label5->Name = L"label5";
 			this->label5->Size = System::Drawing::Size(36, 13);
 			this->label5->TabIndex = 18;
-			this->label5->Text = L"Acc X";
+			this->label5->Text = L"Distance Z (cm)";
 			// 
 			// numericUpDown8
 			// 
@@ -677,8 +688,8 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			// numericUpDown6
 			// 
 			this->numericUpDown6->Location = System::Drawing::Point(20, 190);
-			this->numericUpDown6->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {256, 0, 0, 0});
-			this->numericUpDown6->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {256, 0, 0, System::Int32::MinValue});
+			this->numericUpDown6->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {500, 0, 0, 0});
+			this->numericUpDown6->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {500, 0, 0, System::Int32::MinValue});
 			this->numericUpDown6->Name = L"numericUpDown6";
 			this->numericUpDown6->Size = System::Drawing::Size(69, 20);
 			this->numericUpDown6->TabIndex = 17;
@@ -686,8 +697,8 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			// numericUpDown5
 			// 
 			this->numericUpDown5->Location = System::Drawing::Point(20, 150);
-			this->numericUpDown5->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {256, 0, 0, 0});
-			this->numericUpDown5->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {256, 0, 0, System::Int32::MinValue});
+			this->numericUpDown5->Maximum = System::Decimal(gcnew cli::array< System::Int32 >(4) {500, 0, 0, 0});
+			this->numericUpDown5->Minimum = System::Decimal(gcnew cli::array< System::Int32 >(4) {500, 0, 0, System::Int32::MinValue});
 			this->numericUpDown5->Name = L"numericUpDown5";
 			this->numericUpDown5->Size = System::Drawing::Size(69, 20);
 			this->numericUpDown5->TabIndex = 17;
@@ -796,7 +807,7 @@ private: System::Windows::Forms::NumericUpDown^  numericUpDown9;
 			this->label9->Name = L"label9";
 			this->label9->Size = System::Drawing::Size(72, 13);
 			this->label9->TabIndex = 18;
-			this->label9->Text = L"Potentiometer";
+			this->label9->Text = L"In Range";
 			// 
 			// Form1
 			// 
@@ -1205,6 +1216,7 @@ private: System::Void ReadWriteThread_DoWork(System::Object^  sender, System::Co
 		
 
 
+		
 
 
 
@@ -1288,36 +1300,47 @@ private: System::Void ReadWriteThread_DoWork(System::Object^  sender, System::Co
 		while (multiSourceFrameReader != nullptr) {
 
 			IMultiSourceFrame *multiSourceFrame = nullptr;
+			
 			IBodyFrameReference *bodyFrameReference = nullptr;
-			IBodyFrame *bodyFrame = nullptr;
+			IBodyFrame *bodyFrame = nullptr;			
+			
 			IColorFrameReference *colorFrameReference = nullptr;
 			IColorFrame *colorFrame = nullptr;
+			IFrameDescription *colorFrameDescription = nullptr;
+
+			IDepthFrameReference *depthFrameReference = nullptr;
+			IDepthFrame *depthFrame = nullptr;
+			IFrameDescription *depthFrameDescription = nullptr;
+
+			HRESULT hr_body;
+			HRESULT hr_color;
+			HRESULT hr_depth;
+
 
 			if (SUCCEEDED(hr)) {
-				//TODO: Add checking for source types
 
 				while (FAILED(hr = multiSourceFrameReader->AcquireLatestFrame(&multiSourceFrame)));
 
 				// Get Body Frame
-				hr = multiSourceFrame->get_BodyFrameReference(&bodyFrameReference);
+				hr_body = multiSourceFrame->get_BodyFrameReference(&bodyFrameReference);
 
-				if (SUCCEEDED(hr)) {
-					hr = bodyFrameReference->AcquireFrame(&bodyFrame);
+				if (SUCCEEDED(hr_body)) {					
+					hr_body = bodyFrameReference->AcquireFrame(&bodyFrame);					
 
-					if (SUCCEEDED(hr)) {
+					if (SUCCEEDED(hr_body)) {	
 						IBody *bodies[BODY_COUNT] = { 0 };
-						hr = bodyFrame->GetAndRefreshBodyData(_countof(bodies), bodies);
+						hr_body = bodyFrame->GetAndRefreshBodyData(_countof(bodies), bodies);
 
-						if (SUCCEEDED(hr)) {
-							//std::cout << "Processing bodies!\n";
+						if (SUCCEEDED(hr_body)) {							
 							processBodies(BODY_COUNT, bodies);
-							//std::cout << "After processing bodies!\n";
+							
 							//After body processing is done, we're done with our bodies so release them.
 							for (unsigned int bodyIndex = 0; bodyIndex < _countof(bodies); bodyIndex++) {
 								safeRelease(bodies[bodyIndex]);
-							}
-							safeRelease(bodyFrame);
+							}							
 						}
+
+						safeRelease(bodyFrame);
 					}
 					else if (sensor) {
 						BOOLEAN isSensorAvailable = false;
@@ -1329,59 +1352,158 @@ private: System::Void ReadWriteThread_DoWork(System::Object^  sender, System::Co
 					else {
 						std::cerr << "Trouble reading the body frame.\n";
 					}
+
+					safeRelease(bodyFrameReference);
 				}
+
+				
+				
+
 
 
 
 
 				// Get Color Frame
-				//hr = multiSourceFrame->get_ColorFrameReference(&colorFrameReference);
-				//
-				//if (SUCCEEDED(hr)) {
-				//	hr = colorFrameReference->AcquireFrame(&colorFrame);
+				hr_color = multiSourceFrame->get_ColorFrameReference(&colorFrameReference);
 
-				//	if (SUCCEEDED(hr)) {
-				//		// Process Color Frame
-				//		std::cout << "Got color frame";
-				//		/*
-				//		IBody *bodies[BODY_COUNT] = { 0 };
-				//		hr = bodyFrame->GetAndRefreshBodyData(_countof(bodies), bodies);
+				if (SUCCEEDED(hr_color)) {
+					hr_color = colorFrameReference->AcquireFrame(&colorFrame);
 
-				//		if (SUCCEEDED(hr)) {
-				//			//std::cout << "Processing bodies!\n";
-				//			processBodies(BODY_COUNT, bodies);
-				//			//std::cout << "After processing bodies!\n";
-				//			//After body processing is done, we're done with our bodies so release them.
-				//			for (unsigned int bodyIndex = 0; bodyIndex < _countof(bodies); bodyIndex++) {
-				//				safeRelease(bodies[bodyIndex]);
-				//			}
-				//			safeRelease(colorFrame);
-				//		}
-				//		*/
-				//		safeRelease(colorFrame);
-				//	}
-				//	else if (sensor) {
-				//		BOOLEAN isSensorAvailable = false;
-				//		hr = sensor->get_IsAvailable(&isSensorAvailable);
-				//		if (SUCCEEDED(hr) && isSensorAvailable == false) {
-				//			std::cerr << "No available sensor is found.\n";
-				//		}
-				//	}
-				//	else {
-				//		std::cerr << "Trouble reading the color frame.\n";
-				//	}
-				//}			
+					if (SUCCEEDED(hr_color)) {						
+						hr_color = colorFrame->get_FrameDescription(&colorFrameDescription);
 
+						if (SUCCEEDED(hr_color)) {
+							int width = 0;
+							int height = 0;
+							colorFrameDescription->get_Width(&width);
+							colorFrameDescription->get_Height(&height);
+
+							colorImage.create(height, width, CV_8UC4);
+							BYTE* imgDataPtr = (BYTE*) colorImage.data;
+							
+							hr_color = colorFrame->CopyConvertedFrameDataToArray(width * height * 4, imgDataPtr, ColorImageFormat_Bgra);
+
+							if (SUCCEEDED(hr_color)) {
+								//imread returns the image in B G R order
+
+								if (!colorImage.empty()) // Check for invalid input
+								{
+									cv::Mat tempImage = colorImage;
+									cv::flip(colorImage, tempImage, 1);
+									colorImage = tempImage;
+
+									cv::Size s = colorImage.size();
+									//std::cout << "size: w - " << s.width / 2 << " h - " << s.height / 2 << std::endl;
+									if (cv::getWindowProperty("RGB Camera",CV_WND_PROP_AUTOSIZE) != -1) {
+										cv::imshow("RGB Camera", colorImage); // Show our image inside it.
+										cv::resizeWindow("RGB Camera", s.width / 2, s.height / 2);
+									}
+								}
+							}
+
+							safeRelease(colorFrameDescription);
+						}						
+						
+						safeRelease(colorFrame);
+					}
+					
+					safeRelease(colorFrameReference);
+				}
+
+				
+
+
+
+
+
+
+
+
+				// Get Depth Frame
+				hr_depth = multiSourceFrame->get_DepthFrameReference(&depthFrameReference);
+
+				if (SUCCEEDED(hr_depth)) {
+					hr_depth = depthFrameReference->AcquireFrame(&depthFrame);
+
+					if (SUCCEEDED(hr_depth)) {
+						hr_depth = depthFrame->get_FrameDescription(&depthFrameDescription);
+
+						if (SUCCEEDED(hr_depth)) {
+							int width = 0;
+							int height = 0;
+							UINT16 minReliableDistance = 0;
+							UINT16 maxReliableDistance = 0;
+
+							depthFrameDescription->get_Width(&width);
+							depthFrameDescription->get_Height(&height);
+							depthFrame->get_DepthMinReliableDistance(&minReliableDistance);
+							depthFrame->get_DepthMaxReliableDistance(&maxReliableDistance);
+
+							
+							depthImage_short.create(height, width, CV_16U);
+							UINT16 *imgDataPtr = (UINT16*)depthImage_short.data;
+							
+							
+							//UINT16 *imgDataPtr = NULL;
+							
+							//depthImage_byte.create(height, width, CV_8U);
+							//BYTE *depthImageLower = (BYTE*)depthImage_byte.data;
+
+							hr_depth = depthFrame->CopyFrameDataToArray(width * height, imgDataPtr);
+
+							if (SUCCEEDED(hr_depth)) {
+								// map the values to the depth range
+								for (int i = 0; i < width * height; i++) {
+									// get the lower 8 bits
+									UINT16 depth = (UINT16) imgDataPtr[i];
+									if (i == width*60-100) {
+										ACCValueX = (signed int) depth;
+									}
+
+									//if (depth >= minReliableDistance && depth <= maxReliableDistance) {
+									imgDataPtr[i] = depth * 8;
+									//depthImage_short.data[i] = depth - minReliableDistance; // (BYTE)(depth - minReliableDistance);
+									//}
+									//imgDataPtr[i] = depth * 5;
+
+									
+									//else {
+									//	imgDataPtr[i] = 0;
+									//	//depthImage_short.data[i] = 0;
+									//}
+								}
+
+								if (!depthImage_short.empty()) // Check for invalid input
+								{
+									cv::Mat tempImage = depthImage_short;
+									cv::flip(depthImage_short, tempImage, 1);
+									depthImage_short = tempImage;
+									
+									cv::Size s = depthImage_short.size();
+								
+									if (cv::getWindowProperty("Depth Sensor", CV_WND_PROP_AUTOSIZE) != -1) {
+										cv::imshow("Depth Sensor", depthImage_short); // Show our image inside it.
+										cv::resizeWindow("Depth Sensor", s.width, s.height);
+									}
+								}
+							}
+						
+							safeRelease(depthFrameDescription);
+						}
+
+						safeRelease(depthFrame);
+					}
+
+					safeRelease(depthFrameReference);
+				}
+
+				
 				safeRelease(multiSourceFrame);
 			}
-
-
-			safeRelease(bodyFrameReference);
 		}
 
-
 		safeRelease(multiSourceFrameReader);
-			
+}
 			
 
 // BodyTracking.cpp END BLOCK
@@ -1395,7 +1517,7 @@ private: System::Void ReadWriteThread_DoWork(System::Object^  sender, System::Co
 		//} //end of while(true) loop
 //-------------------------------------------------------END CUT AND PASTE BLOCK-------------------------------------------------------------------------------------
 //-------------------------------------------------------------------------------------------------------------------------------------------------------------------
-}
+
 
 private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 			mTouchCalibratePending = TRUE;
@@ -1407,625 +1529,318 @@ private: System::Void button1_Click(System::Object^  sender, System::EventArgs^ 
 
 
 
-		 int state = 0;
-		 int delayCounter = 0;
 
 
 
+// GLOBAL VARIABLES
+unsigned char lastSpeed = 0;
+unsigned char lastDirections = 0x11;
+unsigned char lastLeftSpeed = 0;
+unsigned char lastRightSpeed = 0;
 
-// BodyTracking.cpp ADDED BY JOSIAH WATSON
+
+int userBodyID = -1;
+bool runInit = true;
+
+
+
+// CONSTANTS
+const double RAD_2_DEG = 180 / 3.14;
+const int BACKWARD = 0;
+const int FORWARD = 1;
+
+const int MAX_SPEED_VAL = 255;
+
+const double THRESH_Z = 2.0;			// meters	// previously 2.44
+const double MAX_SPEED_DIST_Z = 3.0;	// meters	// previously 3.66				
+const double SPEED_RANGE_Z = MAX_SPEED_DIST_Z - THRESH_Z;
+const double K_Z = MAX_SPEED_VAL / SPEED_RANGE_Z;		// steps per meter
+
+const double THRESH_ANGLE = 0.1;//testing - was 0.03;		// 0.087;	// tan(5-deg)				
+const double MAX_SPEED_ANGLE = 0.3;		//0.577;	// tan(30-deg)    was 25 deg 0.466
+const double SPEED_RANGE_ANGLE = MAX_SPEED_ANGLE; // should we subtract threshold angle?
+const double K_X = MAX_SPEED_VAL / SPEED_RANGE_ANGLE;	// steps per angle
+
+const int MAX_SPEED_INCREMENT = 1;
+
+const int MIN_SPEED_VAL_L = 10;    // previously 6
+const int MIN_SPEED_VAL_R = 15;   // previously 10
+//const double LINEAR_FIT_SLOPE_L = (double)(MAX_SPEED_VAL - MIN_SPEED_VAL_L) / MAX_SPEED_VAL;
+const double LINEAR_FIT_SLOPE_R = (double)(MAX_SPEED_VAL - MIN_SPEED_VAL_R) / MAX_SPEED_VAL; // weaker motor
+
+
+
 
 private: System::Void processBodies(const unsigned int &bodyCount, IBody **bodies)
-{
+{	
+
+	for (unsigned int bodyIndex = 0; bodyIndex < bodyCount; bodyIndex++) {
+		IBody *body = bodies[bodyIndex];
+
+		// CHECK IF TRACKING
+		BOOLEAN isTracked = false;
+		HRESULT hr = body->get_IsTracked(&isTracked);
+
+
+		// LOST TRACKING ON THE USER
+		if (isTracked == false && bodyIndex == userBodyID) {
+			
+			// REMOVE OLD - moving average
+			//std::cout << "Reset average differences\n";
+			//for (int i = 0; i < NUM_DIFFS; i++) {
+			//	avgDiff[i] = -1;
+			//}
+			// end OLD
+			
+			// reset initialization
+			userBodyID = -1; 
+			runInit = true;
+			
+			updateGUI(0, 0, 0);
+
+			if (AttachedState == TRUE) { //Do not try to use the read/write handles unless the USB device is attached and ready			
+				
+				/* // send STOP command
+					lastSpeed = 0;				
+				/*/ // go forward and use the last speed					
+					lastSpeed = lastSpeed;
+				//*/
+
+				// TRANSMIT SPEEDS
+				unsigned char directions = (unsigned char)((FORWARD << 4) | (FORWARD)); // set left/right direction
+				unsigned char leftSpeed = (unsigned char) lastSpeed; // set left speed			
+				unsigned char rightSpeed = (unsigned char) lastSpeed; // set right speed
+				
+				// Save values for later				
+				lastDirections = directions;
+				lastLeftSpeed = leftSpeed;
+				lastRightSpeed = rightSpeed;
+
+				transmitData(directions, leftSpeed, rightSpeed);
+			}
+		}
+
+		
+		// NOT TRACKING
+
+		if (FAILED(hr) || isTracked == false) {
+			continue;
+		}
+
+
+
+
+
+		// TRACKING
+
+		// Get joints
+		Joint joints[JointType_Count];
+		hr = body->GetJoints(_countof(joints), joints);
+		
+		if (SUCCEEDED(hr)) {
+			const CameraSpacePoint &spineMidPos = joints[JointType_SpineMid].Position;
+
+
+
+			// INITIALIZATION SEQUENCE			
+			if (runInit) {				
+				userBodyID = bodyIndex;
+				runInit = false;
+			}
+			
+
+			// CONTROL ALGORITHM
+			if (bodyIndex == userBodyID) {				
+				
+				double posX = spineMidPos.X;
+				double posY = spineMidPos.Y;
+				double posZ = spineMidPos.Z;
+				double angle = posX / posZ;
+
+
+				// calculate forward speed
+				double errZ = posZ - THRESH_Z;
+
+				int speed;
+				if (errZ <= 0) {
+					speed = 0;
+				}
+				else if (errZ >= SPEED_RANGE_Z) {
+					speed = 255;
+				}
+				else {
+					speed = floor(K_Z * errZ);
+				}
+
+				// calculate turn speed
+				double abs_angle = abs(angle);
+
+				int turn;
+				if (abs_angle <= THRESH_ANGLE) {
+					turn = 0;
+				}
+				else {
+					double diff = (angle / abs_angle) * (abs_angle - THRESH_ANGLE);
+					turn = floor(K_X * diff * 0.5);
+				}
+
+
+				// determine motor speeds
+				int LSpd = speed - turn;
+				int RSpd = speed + turn;
+
+
+				// check if one motor is maxxed 
+				if (LSpd > MAX_SPEED_VAL) {
+					RSpd -= (LSpd - MAX_SPEED_VAL);
+					LSpd = MAX_SPEED_VAL;
+				}
+				else if (RSpd > MAX_SPEED_VAL) {
+					LSpd -= (RSpd - MAX_SPEED_VAL);
+					RSpd = MAX_SPEED_VAL;
+				}
+
+
+				// determine motor direction
+				int LDir = FORWARD;
+				int RDir = FORWARD;
+				if (LSpd < 0) {
+					LDir = BACKWARD;
+				}
+				if (RSpd < 0) {
+					RDir = BACKWARD;
+				}
+			
+				LSpd = abs(LSpd);
+				RSpd = abs(RSpd);
+
+
+
+				// slowly increment / decrement speed
+				int nextsuLSpd = lastLeftSpeed;
+				if (lastLeftSpeed < MAX_SPEED_VAL - MAX_SPEED_INCREMENT) {
+					nextsuLSpd += MAX_SPEED_INCREMENT;
+				}
+
+				int nextsuRSpd = lastRightSpeed;
+				if (lastRightSpeed < MAX_SPEED_VAL - MAX_SPEED_INCREMENT) {
+					nextsuRSpd += MAX_SPEED_INCREMENT;
+				}
+
+				int nextsdLSpd = lastLeftSpeed;
+				if (lastLeftSpeed > MAX_SPEED_INCREMENT) {
+					nextsdLSpd -= MAX_SPEED_INCREMENT;
+				}
+
+				int nextsdRSpd = lastRightSpeed;
+				if (lastRightSpeed > MAX_SPEED_INCREMENT) {
+					nextsdRSpd -= MAX_SPEED_INCREMENT;
+				}
+
+
+				if (LSpd > lastLeftSpeed) {
+					LSpd = nextsuLSpd;
+				}
+				/*else if (LSpd < lastLeftSpeed) {
+					LSpd = nextsdLSpd;
+				}*/
+
+				if (RSpd > lastRightSpeed) {
+					RSpd = nextsuRSpd;
+				}
+				/*else if (RSpd < lastRightSpeed) {
+					RSpd = nextsdRSpd;
+				}*/
+
+
+				// fit calculated speed to linear speed function				
+				if (LSpd > 0) {
+					LSpd = ceil(LSpd * LINEAR_FIT_SLOPE_R) + MIN_SPEED_VAL_L; //testing
+				}
+				else {
+					LSpd = 0;
+				}
+				if (RSpd > 0) {
+					RSpd = ceil(RSpd * LINEAR_FIT_SLOPE_R) + MIN_SPEED_VAL_R;
+				}
+				else {
+					RSpd = 0;
+				}
+
+
+				// Update GUI
+				updateGUI((posZ * 100), (posX * 100), (atan(angle) * RAD_2_DEG));												
+
+
+				// Transmit new speeds
+				if (AttachedState == TRUE) { //Do not try to use the read/write handles unless the USB device is attached and ready				
+					
+					unsigned char directions = (unsigned char) ((LDir << 4) | (RDir)); // set left/right direction
+					unsigned char leftSpeed = (unsigned char) LSpd; // set left speed			
+					unsigned char rightSpeed = (unsigned char) RSpd; // set right speed
+
+					// Save values for later
+					lastSpeed = speed;
+					lastDirections = directions;
+					lastLeftSpeed = leftSpeed;
+					lastRightSpeed = rightSpeed;
+
+					transmitData(directions, leftSpeed, rightSpeed);
+				}
+
+			}
+		}
+	}
+}
+
+
+
+
+void transmitData(unsigned char dirs, unsigned char ls, unsigned char rs) {
 
 	unsigned char OUTBuffer[65];	//Allocate a memory buffer equal to the OUT endpoint size + 1
 	unsigned char INBuffer[65];		//Allocate a memory buffer equal to the IN endpoint size + 1
 	DWORD BytesWritten = 0;
 	DWORD BytesRead = 0;
 
+	OUTBuffer[0] = 0;			//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
 
-	//int delayCounter = 0;
-	//int state = 0;
+	OUTBuffer[1] = dirs;
+	OUTBuffer[2] = ls;
+	OUTBuffer[3] = rs;
 
-	for (unsigned int bodyIndex = 0; bodyIndex < bodyCount; bodyIndex++) {
-		IBody *body = bodies[bodyIndex];
+	for (unsigned char i = 4; i < 65; i++) {
+		OUTBuffer[i] = 0xFF;
+	}
 
-		//Get the tracking status for the body, if it's not tracked we'll skip it
-		BOOLEAN isTracked = false;
-		HRESULT hr = body->get_IsTracked(&isTracked);
-
-		if (isTracked == false && bodyIndex == activeBodyIndex) {
-			std::cout << "Reset average differences\n";
-			for (int i = 0; i < NUM_DIFFS; i++) {
-				avgDiff[i] = -1;
-			}
-
-
-			if (AttachedState == TRUE)	//Do not try to use the read/write handles unless the USB device is attached and ready
+	if (WriteFile(WriteHandleToUSBDevice, &OUTBuffer, 65, &BytesWritten, 0))	//Blocking function, unless an "overlapped" structure is used
+	{
+		INBuffer[0] = 0;
+		if (ReadFile(ReadHandleToUSBDevice, &INBuffer, 65, &BytesRead, 0))		//Blocking function, unless an "overlapped" structure is used	
+		{
+			if (INBuffer[1] == 0x20)
 			{
-				// If not tracked, send STOP command
-				OUTBuffer[0] = 0;			//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.									
-				OUTBuffer[1] = 0x11; // left forward, right forward
-				OUTBuffer[2] = 0x00; //set left speed
-				OUTBuffer[3] = 0x00; //set right speed
-
-				for (unsigned char i = 4; i < 65; i++)
-					OUTBuffer[i] = 0xFF;
-
-				// TRANSMIT DATA
-				if (WriteFile(WriteHandleToUSBDevice, &OUTBuffer, 65, &BytesWritten, 0))	//Blocking function, unless an "overlapped" structure is used
-				{
-					INBuffer[0] = 0;
-					if (ReadFile(ReadHandleToUSBDevice, &INBuffer, 65, &BytesRead, 0))		//Blocking function, unless an "overlapped" structure is used	
-					{
-						if (INBuffer[1] == 0x20)
-						{
-							ADCValueL = ((0x00 << 8) + INBuffer[3]);	//Need to reformat the data from two unsigned chars into one unsigned int.
-							ADCValueR = ((0x00 << 8) + INBuffer[4]);	//Need to reformat the data from two unsigned chars into one unsigned int.
-							ADCValueSliderTop = ((0x00 << 8) + (INBuffer[2] / 16));	//Need to reformat the data from two unsigned chars into one unsigned int.
-							ADCValueSliderBottom = ((0x00 << 8) + (INBuffer[2] % 16));	//Need to reformat the data from two unsigned chars into one unsigned int.
-						}
-					}
-				}
-			} //end of: if(AttachedState == TRUE)
-
-
-
-
-		}
-
-		if (FAILED(hr) || isTracked == false) {			
-			continue;
-		}
-
-		std::cout << "Body Index: " << bodyIndex << " \n";
-		activeBodyIndex = bodyIndex;
-
-		//If we're here the body is tracked so lets get the joint properties for this skeleton
-		Joint joints[JointType_Count];
-		hr = body->GetJoints(_countof(joints), joints);
-		if (SUCCEEDED(hr)) {
-
-
-			
-			//Let's print the head's position
-			/*
-			const CameraSpacePoint &headPos = joints[JointType_Head].Position;
-			const CameraSpacePoint &leftHandPos = joints[JointType_HandLeft].Position;
-
-
-			//Let's check if the use has his hand up
-			if (leftHandPos.Y >= headPos.Y) {
-			std::cout << "leftHandPos: ";
-			std::cout << "headPos.x: " << headPos.X << "\n";
-			//std::cout << "LEFT HAND UP!!\n";
+				ADCValueL = ((0x00 << 8) + INBuffer[3]);	//Need to reformat the data from two unsigned chars into one unsigned int.
+				ADCValueR = ((0x00 << 8) + INBuffer[4]);	//Need to reformat the data from two unsigned chars into one unsigned int.
+				ADCValueSliderTop = ((0x00 << 8) + (INBuffer[2] / 16));	//Need to reformat the data from two unsigned chars into one unsigned int.
+				ADCValueSliderBottom = ((0x00 << 8) + (INBuffer[2] % 16));	//Need to reformat the data from two unsigned chars into one unsigned int.
+				ADCValuePot = INBuffer[5];
 			}
-
-			HandState leftHandState;
-			hr = body->get_HandLeftState(&leftHandState);
-			if (SUCCEEDED(hr)) {
-			if (leftHandState == HandState_Closed) {
-			std::cout << "CLOSED HAND\n";
-			}
-			else if (leftHandState == HandState_Open) {
-			std::cout << "OPEN HAND\n";
-			}
-			else if (leftHandState == HandState_Lasso) {
-			std::cout << "PEW PEW HANDS\n";
-			}
-			else if (leftHandState == HandState_NotTracked) {
-			std::cout << "HAND IS NOT TRACKED\n";
-			}
-			else if (leftHandState == HandState_Unknown) {
-			std::cout << "HANDS STATE IS UNKNOWN\n";
-			}
-			}
-			*/
-			/*
-			const CameraSpacePoint &spineBasePos		= joints[JointType_SpineBase].Position;		// 0
-			const CameraSpacePoint &spineMidPos			= joints[JointType_SpineMid].Position;		// 1
-			const CameraSpacePoint &neckPos				= joints[JointType_Neck].Position;			// 2
-			const CameraSpacePoint &headPos				= joints[JointType_Head].Position;			// 3
-			//const CameraSpacePoint &shoulderLeftPos		= joints[JointType_ShoulderLeft].Position;	// 4
-			//const CameraSpacePoint &elbowLeftPos		= joints[JointType_ElbowLeft].Position;		// 5
-			//const CameraSpacePoint &wristLeftPos		= joints[JointType_WristLeft].Position;		// 6
-			//const CameraSpacePoint &shoulderRightPos	= joints[JointType_ShoulderRight].Position; // 8
-			//const CameraSpacePoint &elbowRightPos		= joints[JointType_ElbowRight].Position;	// 9
-			//const CameraSpacePoint &wristRightPos		= joints[JointType_WristRight].Position;	// 10
-			const CameraSpacePoint &spineShoulderPos	= joints[JointType_SpineShoulder].Position; // 20
-
-
-			// convert to centimeters
-
-			double spineBase[3]		= { spineBasePos.X, spineBasePos.Y, spineBasePos.Z };
-			double spineMid[3]		= { spineMidPos.X, spineMidPos.Y, spineMidPos.Z };
-			double neck[3]			= { neckPos.X, neckPos.Y, neckPos.Z };
-			double head[3]			= { headPos.X, headPos.Y, headPos.Z };
-			//double shoulderLeft[3]	= { shoulderLeftPos.X, shoulderLeftPos.Y, shoulderLeftPos.Z };
-			//double elbowLeft[3]		= { elbowLeftPos.X, elbowLeftPos.Y, elbowLeftPos.Z };
-			//double wristLeft[3]		= { wristLeftPos.X, wristLeftPos.Y, wristLeftPos.Z };
-			//double shoulderRight[3] = { shoulderRightPos.X, shoulderRightPos.Y, shoulderRightPos.Z };
-			//double elbowRight[3]	= { elbowRightPos.X, elbowRightPos.Y, elbowRightPos.Z };
-			//double wristRight[3]	= { wristRightPos.X, wristRightPos.Y, wristRightPos.Z };
-			double spineShoulder[3] = { spineShoulderPos.X, spineShoulderPos.Y, spineShoulderPos.Z };
-
-			// convert to centimeters
-			int convFactor = 100;
-			for (int i = 0; i < 3; i++) {
-			spineBase[i]		= spineBase[i]		* convFactor;
-			spineMid[i]			= spineMid[i]		* convFactor;
-			neck[i]				= neck[i]			* convFactor;
-			head[i]				= head[i]			* convFactor;
-			//shoulderLeft[i]		= shoulderLeft[i]	* convFactor;
-			//elbowLeft[i]		= elbowLeft[i]		* convFactor;
-			//wristLeft[i]		= wristLeft[i]		* convFactor;
-			//shoulderRight[i]	= shoulderRight[i]	* convFactor;
-			//elbowRight[i]		= elbowRight[i]		* convFactor;
-			//wristRight[i]		= wristRight[i]		* convFactor;
-			spineShoulder[i]	= spineShoulder[i]	* convFactor;
-			}
-
-
-
-			// form differences
-
-			double faceDV[3];
-			double upperBodyDV[3];
-			double lowerBodyDV[3];
-			double neckDV[3];
-			//double leftUpperArmDV[3];
-			//double rightUpperArmDV[3];
-			//double leftLowerArmDV[3];
-			//double rightLowerArmDV[3];
-
-			for (int i = 0; i < 3; i++) {
-			faceDV[i]			= head[i] - neck[i];
-			upperBodyDV[i]		= spineShoulder[i] - spineMid[i];
-			lowerBodyDV[i]		= spineMid[i] - spineBase[i];
-			neckDV[i]			= neck[i] - spineShoulder[i];
-			//leftUpperArmDV[i]	= shoulderLeft[i] - elbowLeft[i];
-			//rightUpperArmDV[i]	= shoulderRight[i] - elbowRight[i];
-			//leftLowerArmDV[i]	= elbowLeft[i] - wristLeft[i];
-			//rightLowerArmDV[i]	= elbowRight[i] - wristRight[i];
-			}
-
-			double differences[NUM_DIFFS];
-			std::string names[NUM_DIFFS] = { "faceLen\t\t", "upperBodyLen\t", "lowerBodyLen\t", "neckLen\t\t"/*,
-			"leftUpperArmLen\t", "rightUpperArmLen", "leftLowerArmLen\t", "rightLowerArmLen"*//* };
-			/*
-			differences[0] =  sqrt( pow(faceDV[0], 2)			+ pow(faceDV[1], 2)				+ pow(faceDV[2], 2)); // faceLen
-			differences[1] =  sqrt( pow(upperBodyDV[0], 2)		+ pow(upperBodyDV[1], 2)		+ pow(upperBodyDV[2], 2)); //upperBodyLen
-			differences[2] =  sqrt( pow(lowerBodyDV[0], 2)		+ pow(lowerBodyDV[1], 2)		+ pow(lowerBodyDV[2], 2)); //lowerBodyLen
-			differences[3] =  sqrt( pow(neckDV[0], 2)			+ pow(neckDV[1], 2)				+ pow(neckDV[2], 2)); //neckLen
-			//differences[4] =  sqrt( pow(leftUpperArmDV[0], 2)	+ pow(leftUpperArmDV[1], 2)		+ pow(leftUpperArmDV[2], 2)); //leftUpperArmLen
-			//differences[5] =  sqrt( pow(rightUpperArmDV[0], 2)	+ pow(rightUpperArmDV[1], 2)	+ pow(rightUpperArmDV[2], 2)); //rightUpperArmLen
-			//differences[6] =  sqrt( pow(leftLowerArmDV[0], 2)	+ pow(leftLowerArmDV[1], 2)		+ pow(leftLowerArmDV[2], 2)); //leftLowerArmLen
-			//differences[7] =  sqrt( pow(rightLowerArmDV[0], 2)	+ pow(rightLowerArmDV[1], 2)	+ pow(rightLowerArmDV[2], 2)); //rightLowerArmLen
-
-			for (int i = 0; i < NUM_DIFFS; i++) {
-			//double jointOfInterest = upperBodyLen;
-
-			//differences[sampleCount % MAX_DIFFBUFF_SIZE] = jointOfInterest;
-			if (differences[i] < lowestVal[i]) {
-			lowestVal[i] = differences[i];
-			}
-			if (differences[i] > highestVal[i]) {
-			highestVal[i] = differences[i];
-			}
-
-			//int endVal = MAX_DIFFBUFF_SIZE;
-			//if (sampleCount < MAX_DIFFBUFF_SIZE) {
-			//endVal = sampleCount;
-			//}
-
-			if (avgDiff[i] == -1) {
-			std::cout << "Set average differences\n";
-			sampleCount = 0;
-			}
-
-			avgDiff[i] = (avgDiff[i]*(sampleCount)+differences[i]) / (sampleCount + 1);
-
-			/*
-			double total = 0;
-			for (int i = 0; i < endVal; i++) {
-			total += differences[i];
-			}
-			double avgDiff = total / endVal; */
-			/*
-			std::cout << names[i].c_str() << "  " << avgDiff[i] /*<< "  " << lowestVal[i] << "  " << highestVal[i] *//* << "\n";
-			}
-
-			double avgFaceLen = avgDiff[0];
-			double avgUpperBodyLen = avgDiff[1];
-			double avgLowerBodyLen = avgDiff[2];
-			double avgNeckLen = avgDiff[3];
-
-			bool isFace = false;
-			bool isUpperBody = false;
-			bool isLowerBody = false;
-			bool isNeck = false;
-
-
-			if (avgFaceLen > jw.faceLen - jw.faceError && avgFaceLen < jw.faceLen + jw.faceError) {
-			isFace = true;
-			std::cout << "Josiah's Face\n";
-			}
-			if (avgUpperBodyLen > jw.upperBodyLen - jw.upperBodyError && avgUpperBodyLen < jw.upperBodyLen + jw.upperBodyError) {
-			isUpperBody = true;
-			std::cout << "Josiah's Upper Body\n";
-			}
-			if (avgLowerBodyLen > jw.lowerBodyLen - jw.lowerBodyError && avgLowerBodyLen < jw.lowerBodyLen + jw.lowerBodyError) {
-			isLowerBody = true;
-			std::cout << "Josiah's Lower Body\n";
-			}
-			if (avgNeckLen > jw.neckLen - jw.neckError && avgNeckLen < jw.neckLen + jw.neckError) {
-			isNeck = true;
-			std::cout << "Josiah's Neck\n";
-			}
-
-
-			if (isFace && isUpperBody && isLowerBody && isNeck) {
-			std::cout << "THIS IS JOSIAH!";
-			}
-
-
-
-
-
-			sampleCount++; */
-
-			const CameraSpacePoint &spineMidPos = joints[JointType_SpineMid].Position;		// 1
-
-			double spm_x = spineMidPos.X * 100;
-			double spm_y = spineMidPos.Y * 100;
-			double spm_z = spineMidPos.Z * 100;
-
-			std::cout << "spineMid (x,y,z): (" <<
-				spm_x << ", " << spm_y << ", " << spm_z << ")\n";
-
-			
-			
-			// CONTROL ALGORITHM
-						
-			double posX = spineMidPos.X;
-			double posZ = spineMidPos.Z;
-
-			
-			const int BACKWARD = 0;
-			const int FORWARD = 1;
-
-			const int minSpeedVal = 30;
-			const int maxSpeedVal = 255;
-
-			const double maxBoxZ = 2.44;
-			const double maxDistZ = 3.66;
-			const double maxBoxX = 0.61;
-			const double maxDistX = 2.745;
-			
-			const double maxDiffZ = maxDistZ - maxBoxZ;
-			const double maxDiffX = maxDistX - maxBoxX;
-			const double Kz = maxSpeedVal / maxDiffZ; // (maxSpeedVal - minSpeedVal) / maxDiffZ;
-			const double Kx = maxSpeedVal / maxDiffX;
-
-									
-
-			double errZ = posZ - maxBoxZ;
-
-			int speed;
-			if (errZ <= 0) {
-				speed = 0;
-			}
-			else if (errZ >= maxDiffZ) {
-				speed = 255;
-			}
-			else {
-				speed = floor(Kz * errZ); // floor(Kz * errZ + minSpeedVal);
-			}
-						
-			
-			double abs_posX = abs(posX);
-			
-			int turn;			
-			if (abs_posX <= maxBoxX) {
-				turn = 0;
-			}
-			else {
-				double diff = (posX / abs_posX) * (abs_posX - maxBoxX);
-				turn = floor(Kx * diff * 0.5);
-			}
-
-
-			int LSpd = speed - turn;
-			int RSpd = speed + turn;
-
-			if (LSpd > maxSpeedVal) {
-				RSpd -= (LSpd - maxSpeedVal);
-				LSpd = maxSpeedVal;
-			}
-			else if (RSpd > maxSpeedVal) {
-				LSpd -= (RSpd - maxSpeedVal);
-				RSpd = maxSpeedVal;
-			}
-
-
-			int LDir = FORWARD;
-			int RDir = FORWARD;
-			if (LSpd < 0) {
-				LDir = BACKWARD;
-			}
-			if (RSpd < 0) {
-				RDir = BACKWARD;
-			}
-
-			LSpd = abs(LSpd);
-			RSpd = abs(RSpd);
-
-			
-
-			// fit to linear speed function
-
-			double slope = (double) (maxSpeedVal - minSpeedVal) / maxSpeedVal;
-			
-			if (LSpd > 0) {
-				LSpd = ceil(LSpd * slope) + minSpeedVal;
-			}
-			else {
-				LSpd = 0;
-			}
-			if (RSpd > 0) {
-				RSpd = ceil(RSpd * slope) + minSpeedVal;
-			}
-			else {
-				RSpd = 0;
-			}
-
-
-
-
-
-			OUTBuffer[1] = (unsigned char) ((LDir << 4) | (RDir)); // set left/right direction
-			OUTBuffer[2] = (unsigned char) LSpd; // set left speed			
-			OUTBuffer[3] = (unsigned char) RSpd; // set right speed
-
-
-			
-			//bool moving = false;
-			//bool forward = false;
-			//float xThresh = 10.0;
-			//float zClose = 100.0;
-			//float zFar = 150.0;
-
-
-			//if (spm_z > zFar) {
-			//	if (moving) {
-			//		std::cout << "User too far away: SPEED UP";
-			//		moving = true;
-			//		forward = true;
-
-			//		OUTBuffer[1] = 0x11; // left forward, right forward
-			//		OUTBuffer[2] = 0xC0; //set left speed
-			//		OUTBuffer[3] = 0xC0; //set right speed
-			//	}
-			//	else {
-			//		std::cout << "User too far away: MOVE TOWARD USER";
-			//		moving = true;
-			//		forward = true;
-
-			//		OUTBuffer[1] = 0x11; // left forward, right forward
-			//		OUTBuffer[2] = 0x80; //set left speed
-			//		OUTBuffer[3] = 0x80; //set right speed
-			//	}
-			//}
-			//else if (spm_z < zClose) {
-			//	if (moving) {
-			//		std::cout << "User too close: SLOW DOWN";
-			//		moving = true;
-			//		forward = true;
-
-			//		OUTBuffer[1] = 0x11; // left forward, right forward
-			//		OUTBuffer[2] = 0x40; //set left speed
-			//		OUTBuffer[3] = 0x40; //set right speed
-			//	}
-			//	else {
-			//		std::cout << "User too close: BACK AWAY FROM USER";
-			//		moving = true;
-			//		forward = false;
-
-			//		OUTBuffer[1] = 0x00; // left forward, right forward
-			//		OUTBuffer[2] = 0x40; //set left speed
-			//		OUTBuffer[3] = 0x40; //set right speed
-			//	}
-			//}
-			//else {
-			//	std::cout << "STOP";
-			//	moving = false;
-
-			//	OUTBuffer[1] = 0x11; // left forward, right forward
-			//	OUTBuffer[2] = 0x00; //set left speed
-			//	OUTBuffer[3] = 0x00; //set right speed
-			//}
-
-			//if (spm_x > xThresh) {
-			//	if (moving) {
-			//		if (forward) {
-			//			std::cout << " | VEER LEFT";
-			//			
-			//			OUTBuffer[1] = 0x11; // left forward, right forward
-			//			OUTBuffer[2] = 0x00; //set left speed
-			//			OUTBuffer[3] = 0x40; //set right speed
-			//		}
-			//		else {
-			//			std::cout << " | BACKUP RIGHT";
-			//			
-			//			OUTBuffer[1] = 0x01; // left forward, right forward
-			//			OUTBuffer[2] = 0x40; //set left speed
-			//			OUTBuffer[3] = 0x00; //set right speed
-			//		}
-			//	}
-			//	else {
-			//		std::cout << " | TURN LEFT";
-
-			//		OUTBuffer[1] = 0x01; // left forward, right forward
-			//		OUTBuffer[2] = 0x40; //set left speed
-			//		OUTBuffer[3] = 0x40; //set right speed
-			//	}
-			//}
-			//else if (spm_x < -xThresh) {
-			//	if (moving) {
-			//		if (forward) {
-			//			std::cout << " | VEER RIGHT";
-
-			//			OUTBuffer[1] = 0x11; // left forward, right forward
-			//			OUTBuffer[2] = 0x40; //set left speed
-			//			OUTBuffer[3] = 0x00; //set right speed
-			//		}
-			//		else {
-			//			std::cout << " | BACKUP LEFT";
-
-			//			OUTBuffer[1] = 0x10; // left forward, right forward
-			//			OUTBuffer[2] = 0x00; //set left speed
-			//			OUTBuffer[3] = 0x40; //set right speed
-			//		}
-			//	}
-			//	else {
-			//		std::cout << " | TURN RIGHT";
-
-			//		OUTBuffer[1] = 0x10; // left forward, right forward
-			//		OUTBuffer[2] = 0x40; //set left speed
-			//		OUTBuffer[3] = 0x40; //set right speed
-			//	}
-			//}
-			//std::cout << "\n";
-
-				
-
-			if (AttachedState == TRUE) {
-				OUTBuffer[0] = 0;			//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.
-				
-				for (unsigned char i = 4; i < 65; i++)
-					OUTBuffer[i] = 0xFF;
-
-				// TRANSMIT DATA
-				if (WriteFile(WriteHandleToUSBDevice, &OUTBuffer, 65, &BytesWritten, 0))	//Blocking function, unless an "overlapped" structure is used
-				{
-					INBuffer[0] = 0;
-					if (ReadFile(ReadHandleToUSBDevice, &INBuffer, 65, &BytesRead, 0))		//Blocking function, unless an "overlapped" structure is used	
-					{
-						if (INBuffer[1] == 0x20)
-						{
-							ADCValueL = ((0x00 << 8) + INBuffer[3]);	//Need to reformat the data from two unsigned chars into one unsigned int.
-							ADCValueR = ((0x00 << 8) + INBuffer[4]);	//Need to reformat the data from two unsigned chars into one unsigned int.
-							ADCValueSliderTop = ((0x00 << 8) + (INBuffer[2] / 16));	//Need to reformat the data from two unsigned chars into one unsigned int.
-							ADCValueSliderBottom = ((0x00 << 8) + (INBuffer[2] % 16));	//Need to reformat the data from two unsigned chars into one unsigned int.
-						}
-					}
-				}
-			} //end of: if(AttachedState == TRUE)
-			
-			
-			//if (AttachedState == TRUE)	//Do not try to use the read/write handles unless the USB device is attached and ready
-			//{
-			//	//if (delayCounter % 50000000 == 0) {
-
-
-			//	//Get ANxx/POT Voltage value from the microcontroller firmware.  Note: some demo boards may not have a pot
-			//	//on them.  In this case, the firmware may be configured to read an ANxx I/O pin voltage with the ADC
-			//	//instead.  If this is the case, apply a proper voltage to the pin.  See the firmware for exact implementation.						
-			//	OUTBuffer[0] = 0;			//The first byte is the "Report ID" and does not get sent over the USB bus.  Always set = 0.						
-
-
-			//	switch (state) {
-			//	case 0:
-			//		OUTBuffer[1] = 0x00; // left backward, right backward
-			//		OUTBuffer[2] = 0x00; //set left speed
-			//		OUTBuffer[3] = 0x3F; //set right speed
-
-			//		state = 1;
-			//		break;
-
-			//	case 1:
-			//		OUTBuffer[1] = 0x01; // left backward, right forward 
-			//		OUTBuffer[2] = 0x40; //set left speed
-			//		OUTBuffer[3] = 0x7F; //set right speed
-
-			//		state = 2;
-			//		break;
-
-			//	case 2:
-			//		OUTBuffer[1] = 0x10; // left forward, right backward
-			//		OUTBuffer[2] = 0x80; //set left speed
-			//		OUTBuffer[3] = 0xBF; //set right speed
-
-			//		state = 3;
-			//		break;
-
-			//	case 3:
-			//		OUTBuffer[1] = 0x11; // left forward, right forward
-			//		OUTBuffer[2] = 0xC0; //set left speed
-			//		OUTBuffer[3] = 0xFF; //set right speed
-
-			//		state = 0;
-			//		break;
-
-			//	}
-
-
-			//	//Both Reverse command (see the firmware source code), gets 10-bit ADC Value
-			//	//Initialize the rest of the 64-byte packet to "0xFF".  Binary '1' bits do not use as much power, and do not cause as much EMI
-			//	//when they move across the USB cable.  USB traffic is "NRZI" encoded, where '1' bits do not cause the D+/D- signals to toggle states.
-			//	//This initialization is not strictly necessary however.
-			//	for (unsigned char i = 4; i < 65; i++)
-			//		OUTBuffer[i] = 0xFF;
-
-
-
-
-
-
-
-			//	// TRANSMIT DATA
-
-
-			//	//To get the ADCValue, first, we send a packet with our "READ_POT" command in it.
-			//	if (WriteFile(WriteHandleToUSBDevice, &OUTBuffer, 65, &BytesWritten, 0))	//Blocking function, unless an "overlapped" structure is used
-			//	{
-			//		INBuffer[0] = 0;
-			//		//Now get the response packet from the firmware.
-			//		if (ReadFile(ReadHandleToUSBDevice, &INBuffer, 65, &BytesRead, 0))		//Blocking function, unless an "overlapped" structure is used	
-			//		{
-			//			//INBuffer[0] is the report ID, which we don't care about.
-			//			//INBuffer[1] is an echo back of the command (see microcontroller firmware).
-			//			//INBuffer[2] and INBuffer[3] contains the ADC value (see microcontroller firmware).  
-			//			if (INBuffer[1] == 0x20)
-			//			{
-			//				//ADCValuePot = (INBuffer[3] << 8) + INBuffer[2];	//Need to reformat the data from two unsigned chars into one unsigned int.
-			//				ADCValueL = ((0x00 << 8) + INBuffer[3]);	//Need to reformat the data from two unsigned chars into one unsigned int.
-			//				ADCValueR = ((0x00 << 8) + INBuffer[4]);	//Need to reformat the data from two unsigned chars into one unsigned int.
-			//				ADCValueSliderTop = ((0x00 << 8) + (INBuffer[2] / 16));	//Need to reformat the data from two unsigned chars into one unsigned int.
-			//				ADCValueSliderBottom = ((0x00 << 8) + (INBuffer[2] % 16));	//Need to reformat the data from two unsigned chars into one unsigned int.
-			//			}
-			//		}
-			//	}
-			//	//}
-
-			//} //end of: if(AttachedState == TRUE)
-
-
-
-
-
-
-
-			// Figure out how to store data for use later.
-
-			// Create color image with body tracking overlayed and position and depth of spine.			
-
-
-			delayCounter++; // TODO: remove
-
 		}
 	}
 }
+
+
+
+
+void updateGUI(int dist, int pos, int angle) {
+	ACCValueX = dist;
+	ACCValueY = pos;
+	ACCValueZ = angle;
+}
+
+
+
 };
 }
 // BodyTracking.cpp END BLOCK
@@ -2046,7 +1861,197 @@ private: System::Void processBodies(const unsigned int &bodyCount, IBody **bodie
 
 
 
+// GETTING BODY FEATURES
 
+
+
+
+
+//Let's print the head's position
+/*
+const CameraSpacePoint &headPos = joints[JointType_Head].Position;
+const CameraSpacePoint &leftHandPos = joints[JointType_HandLeft].Position;
+
+
+//Let's check if the use has his hand up
+if (leftHandPos.Y >= headPos.Y) {
+std::cout << "leftHandPos: ";
+std::cout << "headPos.x: " << headPos.X << "\n";
+//std::cout << "LEFT HAND UP!!\n";
+}
+
+HandState leftHandState;
+hr = body->get_HandLeftState(&leftHandState);
+if (SUCCEEDED(hr)) {
+if (leftHandState == HandState_Closed) {
+std::cout << "CLOSED HAND\n";
+}
+else if (leftHandState == HandState_Open) {
+std::cout << "OPEN HAND\n";
+}
+else if (leftHandState == HandState_Lasso) {
+std::cout << "PEW PEW HANDS\n";
+}
+else if (leftHandState == HandState_NotTracked) {
+std::cout << "HAND IS NOT TRACKED\n";
+}
+else if (leftHandState == HandState_Unknown) {
+std::cout << "HANDS STATE IS UNKNOWN\n";
+}
+}
+*/
+/*
+const CameraSpacePoint &spineBasePos		= joints[JointType_SpineBase].Position;		// 0
+const CameraSpacePoint &spineMidPos			= joints[JointType_SpineMid].Position;		// 1
+const CameraSpacePoint &neckPos				= joints[JointType_Neck].Position;			// 2
+const CameraSpacePoint &headPos				= joints[JointType_Head].Position;			// 3
+//const CameraSpacePoint &shoulderLeftPos		= joints[JointType_ShoulderLeft].Position;	// 4
+//const CameraSpacePoint &elbowLeftPos		= joints[JointType_ElbowLeft].Position;		// 5
+//const CameraSpacePoint &wristLeftPos		= joints[JointType_WristLeft].Position;		// 6
+//const CameraSpacePoint &shoulderRightPos	= joints[JointType_ShoulderRight].Position; // 8
+//const CameraSpacePoint &elbowRightPos		= joints[JointType_ElbowRight].Position;	// 9
+//const CameraSpacePoint &wristRightPos		= joints[JointType_WristRight].Position;	// 10
+const CameraSpacePoint &spineShoulderPos	= joints[JointType_SpineShoulder].Position; // 20
+
+
+// convert to centimeters
+
+double spineBase[3]		= { spineBasePos.X, spineBasePos.Y, spineBasePos.Z };
+double spineMid[3]		= { spineMidPos.X, spineMidPos.Y, spineMidPos.Z };
+double neck[3]			= { neckPos.X, neckPos.Y, neckPos.Z };
+double head[3]			= { headPos.X, headPos.Y, headPos.Z };
+//double shoulderLeft[3]	= { shoulderLeftPos.X, shoulderLeftPos.Y, shoulderLeftPos.Z };
+//double elbowLeft[3]		= { elbowLeftPos.X, elbowLeftPos.Y, elbowLeftPos.Z };
+//double wristLeft[3]		= { wristLeftPos.X, wristLeftPos.Y, wristLeftPos.Z };
+//double shoulderRight[3] = { shoulderRightPos.X, shoulderRightPos.Y, shoulderRightPos.Z };
+//double elbowRight[3]	= { elbowRightPos.X, elbowRightPos.Y, elbowRightPos.Z };
+//double wristRight[3]	= { wristRightPos.X, wristRightPos.Y, wristRightPos.Z };
+double spineShoulder[3] = { spineShoulderPos.X, spineShoulderPos.Y, spineShoulderPos.Z };
+
+// convert to centimeters
+int convFactor = 100;
+for (int i = 0; i < 3; i++) {
+spineBase[i]		= spineBase[i]		* convFactor;
+spineMid[i]			= spineMid[i]		* convFactor;
+neck[i]				= neck[i]			* convFactor;
+head[i]				= head[i]			* convFactor;
+//shoulderLeft[i]		= shoulderLeft[i]	* convFactor;
+//elbowLeft[i]		= elbowLeft[i]		* convFactor;
+//wristLeft[i]		= wristLeft[i]		* convFactor;
+//shoulderRight[i]	= shoulderRight[i]	* convFactor;
+//elbowRight[i]		= elbowRight[i]		* convFactor;
+//wristRight[i]		= wristRight[i]		* convFactor;
+spineShoulder[i]	= spineShoulder[i]	* convFactor;
+}
+
+
+
+// form differences
+
+double faceDV[3];
+double upperBodyDV[3];
+double lowerBodyDV[3];
+double neckDV[3];
+//double leftUpperArmDV[3];
+//double rightUpperArmDV[3];
+//double leftLowerArmDV[3];
+//double rightLowerArmDV[3];
+
+for (int i = 0; i < 3; i++) {
+faceDV[i]			= head[i] - neck[i];
+upperBodyDV[i]		= spineShoulder[i] - spineMid[i];
+lowerBodyDV[i]		= spineMid[i] - spineBase[i];
+neckDV[i]			= neck[i] - spineShoulder[i];
+//leftUpperArmDV[i]	= shoulderLeft[i] - elbowLeft[i];
+//rightUpperArmDV[i]	= shoulderRight[i] - elbowRight[i];
+//leftLowerArmDV[i]	= elbowLeft[i] - wristLeft[i];
+//rightLowerArmDV[i]	= elbowRight[i] - wristRight[i];
+}
+
+double differences[NUM_DIFFS];
+std::string names[NUM_DIFFS] = { "faceLen\t\t", "upperBodyLen\t", "lowerBodyLen\t", "neckLen\t\t"/*,
+"leftUpperArmLen\t", "rightUpperArmLen", "leftLowerArmLen\t", "rightLowerArmLen"*//* };
+/*
+differences[0] =  sqrt( pow(faceDV[0], 2)			+ pow(faceDV[1], 2)				+ pow(faceDV[2], 2)); // faceLen
+differences[1] =  sqrt( pow(upperBodyDV[0], 2)		+ pow(upperBodyDV[1], 2)		+ pow(upperBodyDV[2], 2)); //upperBodyLen
+differences[2] =  sqrt( pow(lowerBodyDV[0], 2)		+ pow(lowerBodyDV[1], 2)		+ pow(lowerBodyDV[2], 2)); //lowerBodyLen
+differences[3] =  sqrt( pow(neckDV[0], 2)			+ pow(neckDV[1], 2)				+ pow(neckDV[2], 2)); //neckLen
+//differences[4] =  sqrt( pow(leftUpperArmDV[0], 2)	+ pow(leftUpperArmDV[1], 2)		+ pow(leftUpperArmDV[2], 2)); //leftUpperArmLen
+//differences[5] =  sqrt( pow(rightUpperArmDV[0], 2)	+ pow(rightUpperArmDV[1], 2)	+ pow(rightUpperArmDV[2], 2)); //rightUpperArmLen
+//differences[6] =  sqrt( pow(leftLowerArmDV[0], 2)	+ pow(leftLowerArmDV[1], 2)		+ pow(leftLowerArmDV[2], 2)); //leftLowerArmLen
+//differences[7] =  sqrt( pow(rightLowerArmDV[0], 2)	+ pow(rightLowerArmDV[1], 2)	+ pow(rightLowerArmDV[2], 2)); //rightLowerArmLen
+
+for (int i = 0; i < NUM_DIFFS; i++) {
+//double jointOfInterest = upperBodyLen;
+
+//differences[sampleCount % MAX_DIFFBUFF_SIZE] = jointOfInterest;
+if (differences[i] < lowestVal[i]) {
+lowestVal[i] = differences[i];
+}
+if (differences[i] > highestVal[i]) {
+highestVal[i] = differences[i];
+}
+
+//int endVal = MAX_DIFFBUFF_SIZE;
+//if (sampleCount < MAX_DIFFBUFF_SIZE) {
+//endVal = sampleCount;
+//}
+
+if (avgDiff[i] == -1) {
+std::cout << "Set average differences\n";
+sampleCount = 0;
+}
+
+avgDiff[i] = (avgDiff[i]*(sampleCount)+differences[i]) / (sampleCount + 1);
+
+/*
+double total = 0;
+for (int i = 0; i < endVal; i++) {
+total += differences[i];
+}
+double avgDiff = total / endVal; */
+/*
+std::cout << names[i].c_str() << "  " << avgDiff[i] /*<< "  " << lowestVal[i] << "  " << highestVal[i] *//* << "\n";
+}
+
+double avgFaceLen = avgDiff[0];
+double avgUpperBodyLen = avgDiff[1];
+double avgLowerBodyLen = avgDiff[2];
+double avgNeckLen = avgDiff[3];
+
+bool isFace = false;
+bool isUpperBody = false;
+bool isLowerBody = false;
+bool isNeck = false;
+
+
+if (avgFaceLen > jw.faceLen - jw.faceError && avgFaceLen < jw.faceLen + jw.faceError) {
+isFace = true;
+std::cout << "Josiah's Face\n";
+}
+if (avgUpperBodyLen > jw.upperBodyLen - jw.upperBodyError && avgUpperBodyLen < jw.upperBodyLen + jw.upperBodyError) {
+isUpperBody = true;
+std::cout << "Josiah's Upper Body\n";
+}
+if (avgLowerBodyLen > jw.lowerBodyLen - jw.lowerBodyError && avgLowerBodyLen < jw.lowerBodyLen + jw.lowerBodyError) {
+isLowerBody = true;
+std::cout << "Josiah's Lower Body\n";
+}
+if (avgNeckLen > jw.neckLen - jw.neckError && avgNeckLen < jw.neckLen + jw.neckError) {
+isNeck = true;
+std::cout << "Josiah's Neck\n";
+}
+
+
+if (isFace && isUpperBody && isLowerBody && isNeck) {
+std::cout << "THIS IS JOSIAH!";
+}
+
+
+
+
+
+sampleCount++; */
 
 
 

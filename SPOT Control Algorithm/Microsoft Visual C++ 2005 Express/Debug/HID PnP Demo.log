@@ -1,9 +1,24 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (HID PnP Demo.vcxproj).  This can lead to incorrect clean and rebuild behavior.
-cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
   BodyTracking.cpp
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1722): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1734): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1770): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1776): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1672): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1684): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1758): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1764): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1772): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\opencv\build\include\opencv2\core\cvstd.hpp(575): warning C4793: 'cv::String::String': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(482): warning C4793: 'cv::Mat::Mat': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(803): warning C4793: 'cv::Mat::release': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(2118): warning C4793: 'cv::SparseMat::addref': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(3718): warning C4793: 'cv::UMat::addref': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\ptr.inl.hpp(67): warning C4793: 'cv::detail::PtrOwner::incRef': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\ptr.inl.hpp(72): warning C4793: 'cv::detail::PtrOwner::decRef': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(701): warning C4793: 'cv::Mat::operator=': function compiled as native:
+  	Found an intrinsic not supported in managed code
   HID PnP Demo.vcxproj -> C:\Users\jwatson27\Source\Repos\SeniorDesignSPOT\SPOT Control Algorithm\Microsoft Visual C++ 2005 Express\Debug\SPOT Control Algorithm.exe
-  HID PnP Demo.vcxproj -> C:\Users\jwatson27\Source\Repos\SeniorDesignSPOT\SPOT Control Algorithm\Microsoft Visual C++ 2005 Express\Debug\SPOT Control Algorithm.pdb (Full PDB)

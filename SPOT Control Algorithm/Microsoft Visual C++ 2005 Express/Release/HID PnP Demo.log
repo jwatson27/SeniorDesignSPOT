@@ -1,15 +1,30 @@
-﻿cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
-  stdafx.cpp
-cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
-  AssemblyInfo.cpp
-AssemblyInfo.cpp(40): warning C4947: 'System::Security::Permissions::SecurityAction::RequestMinimum': marked as obsolete
-  AssemblyInfo.cpp(40): note: Message: 'Assembly level declarative security is obsolete and is no longer enforced by the CLR by default. See http://go.microsoft.com/fwlink/?LinkID=155570 for more information.'
-  HID PnP Demo.cpp
-  Generating Code...
-cl : Command line warning D9035: option 'clr:pure' has been deprecated and will be removed in a future release
-  .NETFramework,Version=v4.0.AssemblyAttributes.cpp
-HID PnP Demo.obj : warning LNK4249: directive '/CLRTHREADATTRIBUTE:STA' conflicts with command line or previous directive; ignored
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Release\) contains files shared from another project (HID PnP Demo.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  BodyTracking.cpp
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1561): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1573): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1647): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1653): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1661): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\opencv\build\include\opencv2\core\cvstd.hpp(575): warning C4793: 'cv::String::String': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\cuda.inl.hpp(105): warning C4793: 'cv::cuda::GpuMat::GpuMat': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\cuda.inl.hpp(395): warning C4793: 'cv::cuda::HostMem::HostMem': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(482): warning C4793: 'cv::Mat::Mat': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(803): warning C4793: 'cv::Mat::release': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(2118): warning C4793: 'cv::SparseMat::addref': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\mat.inl.hpp(3718): warning C4793: 'cv::UMat::addref': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\ptr.inl.hpp(67): warning C4793: 'cv::detail::PtrOwner::incRef': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\ptr.inl.hpp(72): warning C4793: 'cv::detail::PtrOwner::decRef': function compiled as native:
+  	Found an intrinsic not supported in managed code
+c:\opencv\build\include\opencv2\core\cvstd.hpp(657): warning C4793: 'cv::String::operator=': function compiled as native:
+  	Found an intrinsic not supported in managed code
+LINK : warning LNK4075: ignoring '/INCREMENTAL' due to '/LTCG' specification
   LINK : /LTCG specified but no code generation required; remove /LTCG from the link command line to improve linker performance
-HID PnP Demo.obj : warning LNK4249: directive '/CLRTHREADATTRIBUTE:STA' conflicts with command line or previous directive; ignored
-  HID PnP Demo.vcxproj -> H:\Senior Design\USB Device - HID - Custom Demos\Generic HID - PnP Demo - PC Software\Microsoft Visual C++ 2005 Express\Release\HID PnP Demo.exe
-  HID PnP Demo.vcxproj -> H:\Senior Design\USB Device - HID - Custom Demos\Generic HID - PnP Demo - PC Software\Microsoft Visual C++ 2005 Express\Release\HID PnP Demo.pdb (Full PDB)
+  HID PnP Demo.vcxproj -> C:\Users\jwatson27\Source\Repos\SeniorDesignSPOT\SPOT Control Algorithm\Microsoft Visual C++ 2005 Express\Release\SPOT Control Algorithm.exe

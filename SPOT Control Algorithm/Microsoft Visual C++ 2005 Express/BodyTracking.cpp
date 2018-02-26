@@ -1,66 +1,21 @@
 #include "stdafx.h"
-//#include <Kinect.h>
-//#include <iostream>
 #include "Form1.h"
 
 
-//void processBodies(const unsigned int &bodyCount, IBody **bodies);
-//
-//template<class Interface>
-//static inline void safeRelease(Interface *&interfaceToRelease)
-//{
-//    if (interfaceToRelease != nullptr) {
-//        interfaceToRelease->Release();
-//        interfaceToRelease = nullptr;
-//    }
-//}
-//
-////const int MAX_DIFFBUFF_SIZE = 1000;
-////double differences[MAX_DIFFBUFF_SIZE];
-//const int NUM_DIFFS = 4;
-//double lowestVal[NUM_DIFFS];
-//double highestVal[NUM_DIFFS];
-//int sampleCount = 0;
-//double avgDiff[NUM_DIFFS];
-//int activeBodyIndex = -1;
-//
-//class Person {
-//	public:				
-//		Person(double fl, double fe, double ubl, double ube, 
-//			double lbl, double lbe, double nl, double ne) {			   
-//			faceLen = fl;
-//			upperBodyLen = ubl;
-//			lowerBodyLen = lbl;
-//			neckLen = nl;
-//			faceError = fe;
-//			upperBodyError = ube;
-//			lowerBodyError = lbe;
-//			neckError = ne;
-//		}
-//
-//		double faceLen;		
-//		double upperBodyLen;
-//		double lowerBodyLen;
-//		double neckLen;
-//
-//		double faceError;
-//		double upperBodyError;
-//		double lowerBodyError;
-//		double neckError;
-//};
-//
-//Person jw = Person(16.3, 0.8, 25.3, 1.2, 36.0, 1.5, 8.1, 0.5);
 
 
-int main(array<System::String ^> ^args)
-//int main(int argc, char *argv[])
-{
+int main(array<System::String ^> ^args) {		
 	// Enabling Windows XP visual effects before any controls are created
 	HIDPnPDemo::Application::EnableVisualStyles();
 	HIDPnPDemo::Application::SetCompatibleTextRenderingDefault(false);
+	
+	
+	cv::namedWindow("RGB Camera", cv::WINDOW_NORMAL);	// Create a window for display.							  
+	cv::namedWindow("Depth Sensor", cv::WINDOW_NORMAL); // Create a window for display.	
 
-	// Create the main window and run it
+	// Create the main GUI window and run it
 	HIDPnPDemo::Application::Run(gcnew HIDPnPDemo::Form1());
+	
 	return 0;
 
 	
