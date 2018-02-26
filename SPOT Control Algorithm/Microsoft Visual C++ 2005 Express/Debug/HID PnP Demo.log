@@ -1,10 +1,10 @@
 ﻿C:\Program Files (x86)\Microsoft Visual Studio\2017\Enterprise\Common7\IDE\VC\VCTargets\Microsoft.CppBuild.targets(387,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (HID PnP Demo.vcxproj).  This can lead to incorrect clean and rebuild behavior.
   BodyTracking.cpp
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1672): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1684): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1758): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1764): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
-c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1772): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1495): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1507): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1581): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1587): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\jwatson27\source\repos\seniordesignspot\spot control algorithm\microsoft visual c++ 2005 express\Form1.h(1595): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
 c:\opencv\build\include\opencv2\core\cvstd.hpp(575): warning C4793: 'cv::String::String': function compiled as native:
   	Found an intrinsic not supported in managed code
 c:\opencv\build\include\opencv2\core\mat.inl.hpp(482): warning C4793: 'cv::Mat::Mat': function compiled as native:
